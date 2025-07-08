@@ -1,0 +1,14 @@
+.pointers{
+    cursor: pointer;
+}
+@media screen and (max-width:768px) {
+    #header-carousel{
+        height: 28vh;
+    }
+    #header-carousel .carousel-item img {
+        position: absolute;
+        width: 100%;
+        height: 50%;
+        object-fit: fill;
+    }
+}

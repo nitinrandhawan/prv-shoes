@@ -1,0 +1,24 @@
+.w-10{
+    width: 90px;
+}
+@media print {
+  
+.print{
+    display: none;
+}
+.navbar{
+    display: none;
+}
+@page {
+    size: auto; /* Set page size to auto */
+    margin: 0; /* Set margin to 0 */
+}
+.fs{
+    display: none;
+}
+    /* Additional styles for specific elements if needed */
+}
+.underline{
+    margin-top: 11px;
+    text-decoration: underline;
+}
