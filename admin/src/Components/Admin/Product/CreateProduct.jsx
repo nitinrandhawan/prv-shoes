@@ -23,11 +23,21 @@ const CreateProduct = () => {
     pic2: "",
     pic3: "",
     pic4: "",
+    price: "",
+    discount: "",
+    isLatest: false,
   });
 
   const getInputData = (e) => {
     const { name, value } = e.target;
     setData({ ...data, [name]: value });
+  };
+
+  const calculateFinalPrice = (price, discount) => {
+    const p = parseFloat(price) || 0;
+    const d = parseFloat(discount) || 0;
+    const discountedAmount = (p * d) / 100;
+    return (p - discountedAmount).toFixed(2);
   };
 
   const getInputFile = (e) => {
@@ -78,7 +88,9 @@ const CreateProduct = () => {
       !data.color ||
       !data.brand ||
       !data.stock ||
-      !data.pic1
+      !data.pic1 ||
+      !data.price ||
+      !data.discount
     ) {
       return toast.error("Please fill all required fields including pic1.");
     }
@@ -93,6 +105,9 @@ const CreateProduct = () => {
     formData.append("stock", data.stock);
     formData.append("description", data.description);
     formData.append("pic1", data.pic1);
+    formData.append("price", data.price);
+    formData.append("discount", data.discount);
+    formData.append("isLatest", data.isLatest); 
     if (data.pic2) formData.append("pic2", data.pic2);
     if (data.pic3) formData.append("pic3", data.pic3);
     if (data.pic4) formData.append("pic4", data.pic4);
@@ -118,7 +133,7 @@ const CreateProduct = () => {
         toast.error("Failed to add product");
       }
     } catch (error) {
-        toast.dismiss(loader);
+      toast.dismiss(loader);
 
       console.error(error);
       toast.error("Something went wrong");
@@ -175,9 +190,7 @@ const CreateProduct = () => {
                 >
                   <option value="">Choose Subcategory</option>
                   {allSubcategory
-                    .filter(
-                      (sub) => sub.category._id === data.maincategory
-                    )
+                    .filter((sub) => sub.category._id === data.maincategory)
                     .map((item) => (
                       <option key={item._id} value={item._id}>
                         {item.subcategory}
@@ -238,12 +251,11 @@ const CreateProduct = () => {
                   required
                 >
                   <option value="">Choose Size</option>
-                  {allSize
-                    .map((item) => (
-                      <option key={item._id} value={item._id}>
-                        {item.sizename}
-                      </option>
-                    ))}
+                  {allSize.map((item) => (
+                    <option key={item._id} value={item._id}>
+                      {item.sizename}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div className="mb-3">
@@ -310,6 +322,63 @@ const CreateProduct = () => {
                   onChange={getInputFile}
                 />
               </div>
+              <div>
+                <div className="mb-3">
+                  <label>
+                    Price <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    name="price"
+                    value={data.price}
+                    onChange={getInputData}
+                    required
+                    placeholder="Price"
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label>Discount (%)</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    name="discount"
+                    value={data.discount}
+                    onChange={getInputData}
+                    placeholder="Discount Percentage"
+                  />
+                </div>
+
+                {/* Final Price Display */}
+                <div className="mb-3">
+                  <label className="fw-bold">
+                    Final Price:{" "}
+                    <span className="text-success">
+                      ₹{calculateFinalPrice(data.price, data.discount)}
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div className="mb-3 form-check">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  id="latestProduct"
+                  name="isLatest"
+                  checked={data.isLatest}
+                  onChange={(e) =>
+                    setData((prev) => ({
+                      ...prev,
+                      isLatest: e.target.checked,
+                    }))
+                  }
+                />
+                <label className="form-check-label" htmlFor="latestProduct">
+                  Latest Product
+                </label>
+              </div>
+
               <button
                 className="btn mt-2 mb-3 text-light w-100"
                 style={{ backgroundColor: "#183661" }}

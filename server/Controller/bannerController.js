@@ -1,5 +1,5 @@
 const Banner = require("../model/bannerModel");
-const { uploadOnCloudinary } = require("../utils/uploadOnCloudinary");
+const uploadOnCloudinary = require("../utils/uploadOnCloudinary");
 
 exports.createBanner = async (req, res) => {
   try {

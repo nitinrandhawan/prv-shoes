@@ -16,7 +16,9 @@ const createProduct = async (req, res) => {
       stock,
       description,
     } = req.body || {};
-
+    const price = req.body.price ? Number(req.body.price) : undefined;
+    const discount = req.body.discount ? Number(req.body.discount) : undefined;
+    const isLatest = req.body.isLatest === "true";
     if (
       !name ||
       !brand ||
@@ -24,7 +26,10 @@ const createProduct = async (req, res) => {
       !subcategory ||
       !color ||
       !sizename ||
-      !stock
+      !stock ||
+      !description ||
+      price === undefined ||
+      discount === undefined
     ) {
       return res.status(400).json({
         success: false,
@@ -60,7 +65,7 @@ const createProduct = async (req, res) => {
       uploadImage(files?.pic3),
       uploadImage(files?.pic4),
     ]);
-
+    const finalPrice = price - (price * discount) / 100;
     const newProduct = new Product({
       name,
       brand,
@@ -74,6 +79,10 @@ const createProduct = async (req, res) => {
       pic2,
       pic3,
       pic4,
+      price,
+      finalPrice,
+      discount,
+      isLatest,
     });
     await newProduct.save();
 
@@ -104,6 +113,12 @@ const updateProduct = async (req, res) => {
       description,
     } = req.body || {};
     const files = req.files;
+    const price = req.body.price ? Number(req.body.price) : undefined;
+    const discount = req.body.discount ? Number(req.body.discount) : undefined;
+    const isLatest =
+      typeof req.body.isLatest !== "undefined"
+        ? String(req.body.isLatest) === "true"
+        : undefined;
 
     const uploadImage = async (file) =>
       file ? await uploadOnCloudinary(file[0].path) : "";
@@ -121,7 +136,15 @@ const updateProduct = async (req, res) => {
     if (sizename) product.sizename = sizename;
     if (stock) product.stock = Number(stock);
     if (description !== undefined) product.description = description;
-
+    if (price || discount) {
+      if (price !== undefined) product.price = price;
+      if (discount !== undefined) product.discount = discount;
+      const updatedPrice = price || product.price;
+      const updatedDiscount = discount || product.discount;
+      product.finalPrice =
+        updatedPrice - (updatedPrice * updatedDiscount) / 100;
+    }
+    if (isLatest !== undefined) product.isLatest = isLatest;
     await product.save();
 
     res.status(200).json({ success: true, data: product });

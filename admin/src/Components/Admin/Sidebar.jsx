@@ -6,6 +6,7 @@ const Sidebar = () => {
     <div style={{ marginTop: "50px", marginBottom: "50px" }}>
       <ul className="list-group">
         <Link to='/'><li className="list-group-item mb-3">Dashboard<span className='fa fa-list float-end'></span></li></Link>
+        <Link to='/admin/banner'><li className="list-group-item mb-3">Banner<span className='fa fa-list float-end'></span></li></Link>
 
         <Link to='/admin/category'><li className="list-group-item mb-3">Category <span className='fa fa-list float-end'></span></li></Link>
         <Link to='/admin/subcategory'><li className="list-group-item mb-3">Subcategory <span className='fa fa-list float-end'></span></li></Link>

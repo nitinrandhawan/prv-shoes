@@ -55,6 +55,28 @@ const AdminProduct = () => {
   const currentProducts = data.slice(indexOfFirstProduct, indexOfLastProduct);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+
+  const handleLatestChange = async (e,id) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.put(`http://localhost:9000/api/product/${id}`,{
+        isLatest: e.target.checked
+      }, {
+        headers: {
+          Authorization: `${token}`,
+        },
+      },);
+      if (res.status === 200) {
+        toast.success("Product updated successfully");
+        getAPIData();
+      } else {
+        toast.error("Failed to update product");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  };
   return (
     <>
       <div className="blue_bg mt-5">
@@ -94,8 +116,12 @@ const AdminProduct = () => {
                     <th>Stock</th>
                     <th>Pic1</th>
                     <th>Pic2</th>
-                    <th>Pic3</th>
-                    <th>Pic4</th>
+                    {/* <th>Pic3</th>
+                    <th>Pic4</th> */}
+                    <th>Is Latest</th>
+                    <th>Price</th>
+                    <th>Discount</th>
+                    <th>Final Price</th>
                     <th colSpan={2}>Action</th>
                   </tr>
                 </thead>
@@ -131,7 +157,7 @@ const AdminProduct = () => {
                           <span className="text-muted">No Image</span>
                         )}
                       </td>
-                      <td>
+                      {/* <td>
                         {item.pic3 ? (
                           <img
                             src={item.pic3}
@@ -141,8 +167,8 @@ const AdminProduct = () => {
                         ) : (
                           <span className="text-muted">No Image</span>
                         )}
-                      </td>
-                      <td>
+                      </td> */}
+                      {/* <td>
                         {item.pic4 ? (
                           <img
                             src={item.pic4}
@@ -152,8 +178,17 @@ const AdminProduct = () => {
                         ) : (
                           <span className="text-muted">No Image</span>
                         )}
+                      </td> */}
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={item.isLatest}
+                         onChange={(e)=> handleLatestChange(e,item._id)}
+                        />
                       </td>
-
+                      <td>{item.price}</td>
+                      <td>{item.discount}</td>
+                      <td>{item.finalPrice}</td>
                       <td>
                         <Link
                           to={`/editproduct/${item._id}`}

@@ -25,6 +25,9 @@ const UpdateProduct = () => {
     pic2: null,
     pic3: null,
     pic4: null,
+     price: "",
+    discount: "",
+    isLatest: false, 
   });
 
   const getInputData = (e) => {
@@ -32,6 +35,12 @@ const UpdateProduct = () => {
     setData((prev) => ({ ...prev, [name]: value }));
   };
 
+    const calculateFinalPrice = (price, discount) => {
+    const p = parseFloat(price) || 0;
+    const d = parseFloat(discount) || 0;
+    const discountedAmount = (p * d) / 100;
+    return (p - discountedAmount).toFixed(2);
+  };
   const getInputFile = (e) => {
     const { name, files } = e.target;
     setData((prev) => ({ ...prev, [name]: files[0] }));
@@ -84,6 +93,7 @@ const UpdateProduct = () => {
     formData.append("color", data.color);
     formData.append("stock", data.stock);
     formData.append("description", data.description);
+    formData.append("isLatest", data.isLatest); 
 
     if (data.pic1) formData.append("pic1", data.pic1);
     if (data.pic2) formData.append("pic2", data.pic2);
@@ -293,6 +303,63 @@ const UpdateProduct = () => {
                   onChange={getInputFile}
                 />
               </div>
+               <div>
+                <div className="mb-3">
+                  <label>
+                    Price <span className="text-danger">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    name="price"
+                    value={data.price}
+                    onChange={getInputData}
+                    required
+                    placeholder="Price"
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label>Discount (%)</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    name="discount"
+                    value={data.discount}
+                    onChange={getInputData}
+                    placeholder="Discount Percentage"
+                  />
+                </div>
+
+                {/* Final Price Display */}
+                <div className="mb-3">
+                  <label className="fw-bold">
+                    Final Price:{" "}
+                    <span className="text-success">
+                      ₹{calculateFinalPrice(data.price, data.discount)}
+                    </span>
+                  </label>
+                </div>
+              </div>
+               <div className="mb-3 form-check">
+                <input
+                  type="checkbox"
+                  className="form-check-input"
+                  id="latestProduct"
+                  name="isLatest"
+                  checked={data.isLatest}
+                  onChange={(e) =>
+                    setData((prev) => ({
+                      ...prev,
+                      isLatest: e.target.checked,
+                    }))
+                  }
+                />
+                <label className="form-check-label" htmlFor="latestProduct">
+                  Latest Product
+                </label>
+              </div>
+
               <button
                 type="submit"
                 className="btn mt-2 mb-3 text-light w-100"

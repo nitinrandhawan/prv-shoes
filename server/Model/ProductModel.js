@@ -24,7 +24,7 @@ const ProductSchema = new mongoose.Schema({
     required: [true, "Product Color is Must Required"],
   },
   sizename: {
-    type:mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Size",
     required: [true, "Product Color is Must Required"],
   },
@@ -37,7 +37,7 @@ const ProductSchema = new mongoose.Schema({
   },
   pic1: {
     type: String,
-    required: [true, "Product Pic is must Required"]
+    required: [true, "Product Pic is must Required"],
   },
   pic2: {
     type: String,
@@ -48,7 +48,21 @@ const ProductSchema = new mongoose.Schema({
   pic4: {
     type: String,
   },
+  isLatest: {
+    type: Boolean,
+    default: false,
+  },
  
+  price: {
+    type: Number,
+    required: [true, "Product Price is must Required"],
+  },
+  discount: {
+    type: Number,
+  },
+  finalPrice: {
+    type: Number,
+  },
 });
 
 const Product = mongoose.model("Product", ProductSchema);

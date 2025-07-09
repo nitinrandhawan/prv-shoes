@@ -1,10 +1,27 @@
-import React from "react";
+"use client"
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import { BiArrowBack } from "react-icons/bi";
+import  axiosInstance  from "@/utils/axiosInstance";
 
 const HeroBanner = () => {
+  const [banner, setBanner] = useState([]);
+  const fetchBanners = async () => {
+    try {
+      const res = await axiosInstance.get("/api/banner");
+      if (res.status === 200) {
+        setBanner(res.data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBanners();
+  }, []);
   return (
     <div className="relative text-white w-full max-w-[1360px] mx-auto">
       <Carousel
@@ -31,12 +48,13 @@ const HeroBanner = () => {
         )}
       >
         {/* slide 1 */}
-        <div className="relative">
+        {banner?.filter((item) => item?.isActive === true)?.map((item, index) => (
+           <div className="relative">
           <img
-            src="/Banner/shoe 1.jpg"
+            src={item?.bannerImage}
             className="aspect-[16/10] md:aspect-auto object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent flex flex-col justify-center items-start p-6 md:p-12">
+          {/* <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent flex flex-col justify-center items-start p-6 md:p-12">
             <h2 className="text-2xl md:text-4xl font-bold mb-2 animate-slide-in">
               New Arrivals
             </h2>
@@ -48,11 +66,12 @@ const HeroBanner = () => {
                 Shop Now
               </div>
             </Link>
-          </div>
+          </div> */}
         </div>
+        ))}
 
-        {/* slide 2 */}
-        <div className="relative">
+      
+        {/* <div className="relative">
           <img
             src="/Banner/shoe 2.jpg"
             className="aspect-[16/10] md:aspect-auto object-cover"
@@ -72,7 +91,7 @@ const HeroBanner = () => {
           </div>
         </div>
 
-        {/* slide 3 */}
+      
         <div className="relative">
           <img
             src="/Banner/shoe 3.jpg"
@@ -91,7 +110,7 @@ const HeroBanner = () => {
               </div>
             </Link>
           </div>
-        </div>
+        </div> */}
       </Carousel>
     </div>
   );

@@ -41,6 +41,9 @@ import Login from "./Components/Admin/Login";
 import ProtectedRoute from "./Utils/ProtectedRoute";
 import { useEffect } from "react";
 import axios from "axios";
+import Banner from "./Components/Admin/Banner/Banner";
+import CreateBanner from "./Components/Admin/Banner/CreateBanner";
+import EditBanner from "./Components/Admin/Banner/EditBanner";
 
 function App() {
   const [token, setToken] = useState(null);
@@ -107,6 +110,9 @@ function App() {
                 path="/admin/subcategory/create"
                 element={<CreateSubcategory />}
               />
+              <Route path="/admin/banner" element={<Banner />} />
+              <Route path="/admin/banner/create" element={<CreateBanner />} />
+              <Route path="/admin/banner/edit/:id" element={<EditBanner />} />
               <Route
                 path="/editsubcategory/:_id"
                 element={<UpdateSubcategory />}
