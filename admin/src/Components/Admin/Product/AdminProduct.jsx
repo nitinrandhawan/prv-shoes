@@ -12,7 +12,7 @@ const AdminProduct = () => {
   const getAPIData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:9000/api/product", {
+      const res = await axios.get("http://localhost:9000/api/product/get-all-products", {
         headers: {
           Authorization: `${token}`,
         },
@@ -59,7 +59,7 @@ const AdminProduct = () => {
   const handleLatestChange = async (e,id) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.put(`http://localhost:9000/api/product/${id}`,{
+      const res = await axios.put(`http://localhost:9000/api/product/update-product/${id}`,{
         isLatest: e.target.checked
       }, {
         headers: {

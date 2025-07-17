@@ -53,7 +53,7 @@ const UpdateProduct = () => {
           axios.get("http://localhost:9000/api/category"),
           axios.get("http://localhost:9000/api/subcategory"),
           axios.get("http://localhost:9000/api/size"),
-          axios.get(`http://localhost:9000/api/product/${_id}`),
+          axios.get(`http://localhost:9000/api/product/get-single-product/${_id}`),
         ]);
       setAllCategory(categoryRes.data.data);
       setAllSubcategory(subcategoryRes.data.data);
@@ -104,7 +104,7 @@ const UpdateProduct = () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.put(
-        `http://localhost:9000/api/product/${_id}`,
+        `http://localhost:9000/api/product/update-product/${_id}`,
         formData,
         {
           headers: {

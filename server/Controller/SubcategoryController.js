@@ -102,10 +102,26 @@ const deleteSubcategory = async (req, res) => {
   }
 };
 
+const getSubcategoriesByCategory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const subcategories = await Subcategory.find({ category: id }).populate("category");
+    if (!subcategories || subcategories.length === 0) {
+      return res.status(404).json({ success: false, msg: "No subcategories found for this category" });
+    }
+    res.status(200).json({ success: true, data: subcategories });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
+
+
 module.exports = {
   createSubcategory,
   updateSubcategory,
   getSubcategories,
   deleteSubcategory,
   getSingleSubcategory,
+  getSubcategoriesByCategory
 };

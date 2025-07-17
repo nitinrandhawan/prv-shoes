@@ -201,10 +201,25 @@ const deleteProduct = async (req, res) => {
   }
 };
 
+const latestProducts = async (req, res) => {
+  try {
+    console.log("Fetching latest products...");
+    
+    const data = await Product.find({ isLatest: true }).populate(
+      "category subcategory sizename"
+    );
+    return res.status(200).json({ success: true, data });
+  } catch (error) {
+    console.error("Feature Products Error:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
 module.exports = {
   createProduct,
   updateProduct,
   getAllProducts,
   getSingleProduct,
   deleteProduct,
+  latestProducts
 };

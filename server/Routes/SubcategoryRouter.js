@@ -4,6 +4,7 @@ const {
   updateSubcategory,
   deleteSubcategory,
   getSingleSubcategory,
+  getSubcategoriesByCategory,
 } = require("../controller/SubcategoryController");
 
 const upload = require("../utils/multer");
@@ -14,5 +15,5 @@ SubcategoryRouter.put("/:_id", upload.single("image"), updateSubcategory);
 SubcategoryRouter.get("/", getSubcategories);
 SubcategoryRouter.get("/:_id", getSingleSubcategory);
 SubcategoryRouter.delete("/:_id", deleteSubcategory);
-
+SubcategoryRouter.get("/get-subcategories-by-category/:id", getSubcategoriesByCategory);
 module.exports = SubcategoryRouter;

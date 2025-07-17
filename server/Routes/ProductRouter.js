@@ -4,7 +4,8 @@ const {
   getAllProducts,
   getSingleProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  latestProducts
 } = require("../Controller/ProductController");
 const { verifyAdmin } = require("../verification");
 const upload = require("../utils/multer");
@@ -12,7 +13,7 @@ const upload = require("../utils/multer");
 const ProductRouter = express.Router();
 
 ProductRouter.post(
-  "/",
+  "/create-product",
   verifyAdmin,
   upload.fields([
     { name: "pic1", maxCount: 1 },
@@ -23,11 +24,12 @@ ProductRouter.post(
   createProduct
 );
 
-ProductRouter.get("/", getAllProducts);
-ProductRouter.get("/:_id", getSingleProduct);
+ProductRouter.get("/get-all-products", getAllProducts);
+ProductRouter.get("/latest-products", latestProducts);
+ProductRouter.get("/get-single-product/:_id", getSingleProduct);
 
 ProductRouter.put(
-  "/:_id",
+  "/update-product/:_id",
   verifyAdmin,
   upload.fields([
     { name: "pic1", maxCount: 1 },

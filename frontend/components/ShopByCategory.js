@@ -1,28 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/router";
-import categories from "@/data/categories"; // Importing category data
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCategories } from "@/store/features/categorySlice";
 
 const ShopByCategory = () => {
   const router = useRouter();
   const [visibleCategories, setVisibleCategories] = useState([]);
+  const dispatch = useDispatch();
+  const categories = useSelector((state) => state.category.categories);
+  console.log("Categories:", categories);
 
   useEffect(() => {
     // Check screen width on client side
     const updateVisibleCategories = () => {
-      setVisibleCategories(categories.slice(0, window.innerWidth < 768 ? 4 : 8));
+      setVisibleCategories(
+        categories.slice(0, window.innerWidth < 768 ? 4 : 8)
+      );
     };
 
     updateVisibleCategories(); // Set initial value
     window.addEventListener("resize", updateVisibleCategories); // Update on resize
 
     return () => window.removeEventListener("resize", updateVisibleCategories); // Cleanup
-  }, []);
+  }, [dispatch, categories]);
 
   const handleCategoryClick = (link) => {
-    router.push(link);
+    router.push(`/shop-by-subcategory/${link}`);
   };
 
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
   return (
     <motion.div className="mt-20 px-6 md:px-16 lg:px-20 pb-24">
       {/* Heading */}
@@ -37,28 +46,31 @@ const ShopByCategory = () => {
 
       {/* Subtext */}
       <p className="text-lg text-gray-600 mt-3 text-center max-w-3xl mx-auto">
-        Discover the best products that match your style and needs. Browse through.
+        Discover the best products that match your style and needs. Browse
+        through.
       </p>
 
       {/* Categories Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-12">
-        {visibleCategories.map((category) => (
+        {visibleCategories?.slice(0, 8)?.map((category) => (
           <motion.div
-            key={category.id}
+            key={category._id}
             whileHover={{ scale: 1.05 }}
-            onClick={() => handleCategoryClick(category.link)}
+            onClick={() => handleCategoryClick(category._id)}
             className="relative cursor-pointer p-4 border border-gray-300 rounded-xl shadow-md bg-white hover:shadow-xl transition-all duration-300"
           >
             {/* Category Image */}
             <motion.img
-              src={category.image}
-              alt={category.name}
+              src={category.categoryImage}
+              alt={category.category}
               className="w-full h-[220px] md:h-[250px] object-cover rounded-lg transition-transform duration-500 hover:scale-105"
             />
 
             {/* Overlay Effect */}
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-500 rounded-lg">
-              <h3 className="text-lg md:text-xl font-bold text-white">{category.name}</h3>
+              <h3 className="text-lg md:text-xl font-bold text-white">
+                {category?.category}
+              </h3>
             </div>
           </motion.div>
         ))}

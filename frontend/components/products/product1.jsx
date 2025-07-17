@@ -2,63 +2,71 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import ProductCard from "@/components/ProductCard";
 import productsData from "@/data/products"; // Import product data
+import { useDispatch, useSelector } from "react-redux";
+import { fetchLatestProducts } from "@/store/features/productSlice";
 
 const HomeProducts = () => {
-    const [products, setProducts] = useState([]);
-    const [visibleProducts, setVisibleProducts] = useState([]);
-    const router = useRouter();
 
-    useEffect(() => {
-        const allProducts = Object.values(productsData).flat();
-        setProducts(allProducts);
+  const [visibleProducts, setVisibleProducts] = useState([]);
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-        // Responsive Products Display
-        const updateVisibleProducts = () => {
-            if (window.innerWidth < 640) {
-                setVisibleProducts(allProducts.slice(0, 4)); // Mobile: 4 products (2x2 grid)
-            } else {
-                setVisibleProducts(allProducts.slice(0, 8)); // Desktop: 8 products
-            }
-        };
+const { latestProducts} = useSelector((state) => state.product);
 
-        updateVisibleProducts(); // Set initial value
-        window.addEventListener("resize", updateVisibleProducts); // Listen for screen resize
+useEffect(() => {
+    // Responsive Products Display
+    const updateVisibleProducts = () => {
+      if (window.innerWidth < 640) {
+        setVisibleProducts(latestProducts.slice(0, 4)); // Mobile: 4 products (2x2 grid)
+      } else {
+        setVisibleProducts(latestProducts.slice(0, 8)); // Desktop: 8 products
+      }
+    };
 
-        return () => window.removeEventListener("resize", updateVisibleProducts); // Cleanup
-    }, []);
+    updateVisibleProducts(); // Set initial value
+    window.addEventListener("resize", updateVisibleProducts); // Listen for screen resize
 
-    return (
-        <div className="max-w-[1360px] mx-auto p-4">
-            {/* Heading */}
-            <div className="text-center max-w-[900px] mx-auto my-12 px-4">
-                <h2 className="text-[42px] md:text-[60px] font-extrabold uppercase text-black leading-tight font-['Bebas Neue']">
-                    Explore Our <span className="text-[#ff4500]">Latest Products</span>
-                </h2>
-                <p className="text-lg text-gray-600 mt-3">
-                    Find the best products that suit your style and needs.
-                </p>
-            </div>
+    return () => window.removeEventListener("resize", updateVisibleProducts); // Cleanup
+  }, [dispatch, latestProducts]);
 
-            {/* Show Limited Products */}
-            <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {visibleProducts.map((product) => (
-                    <div key={product.id} className="border rounded-lg shadow-lg overflow-hidden p-4">
-                        <ProductCard data={product} />
-                    </div>
-                ))}
-            </div>
+  useEffect(() => {
+    dispatch(fetchLatestProducts());
+  }, [dispatch]);
+  return (
+    <div className="max-w-[1360px] mx-auto p-4">
+      {/* Heading */}
+      <div className="text-center max-w-[900px] mx-auto my-12 px-4">
+        <h2 className="text-[42px] md:text-[60px] font-extrabold uppercase text-black leading-tight font-['Bebas Neue']">
+          Explore Our <span className="text-[#ff4500]">Latest Products</span>
+        </h2>
+        <p className="text-lg text-gray-600 mt-3">
+          Find the best products that suit your style and needs.
+        </p>
+      </div>
 
-            {/* View All Button */}
-            <div className="text-center my-8">
-                <button
-                    onClick={() => router.push("/all-products")}
-                    className="w-full inline-block sm:w-[218px] px-[54px] py-4 border rounded-full hover:bg-black hover:text-white text-black transition-all font-medium text-sm sm:text-base border-black/10"
-                >
-                    View All
-                </button>
-            </div>
-        </div>
-    );
+      {/* Show Limited Products */}
+      <div className="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {visibleProducts?.map((product) => (
+          <div
+            key={product._id}
+            className="border rounded-lg shadow-lg overflow-hidden p-4"
+          >
+            <ProductCard data={product} />
+          </div>
+        ))}
+      </div>
+
+      {/* View All Button */}
+      <div className="text-center my-8">
+        <button
+          onClick={() => router.push("/all-products")}
+          className="w-full inline-block sm:w-[218px] px-[54px] py-4 border rounded-full hover:bg-black hover:text-white text-black transition-all font-medium text-sm sm:text-base border-black/10"
+        >
+          View All
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default HomeProducts;

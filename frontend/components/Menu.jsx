@@ -16,20 +16,20 @@ const Menu = ({ showCatMenu, setShowCatMenu }) => {
     const offerColors = ["bg-red-500", "bg-blue-500", "bg-green-500", "bg-purple-500"];
     const [currentOffer, setCurrentOffer] = useState(0);
 
-    useEffect(() => {
-        // Change offer message and color every 5 seconds
-        const interval = setInterval(() => {
-            setCurrentOffer((prev) => (prev + 1) % offerMessages.length);
-            setOfferColor(offerColors[Math.floor(Math.random() * offerColors.length)]);
-        }, 5000);
+    // useEffect(() => {
+    //     // Change offer message and color every 5 seconds
+    //     const interval = setInterval(() => {
+    //         setCurrentOffer((prev) => (prev + 1) % offerMessages.length);
+    //         setOfferColor(offerColors[Math.floor(Math.random() * offerColors.length)]);
+    //     }, 5000);
 
-        return () => clearInterval(interval);
-    }, []);
+    //     return () => clearInterval(interval);
+    // }, []);
 
     return (
         <div className="relative">
             {/* ✅ Offer Banner */}
-            {showOffer && (
+            {/* {showOffer && (
                 <div className={`${offerColor} text-white text-center py-0 px-2 flex justify-between items-center transition-all duration-500`}>
                     <span className="text-sm font-semibold md:hidden">Enjoy Offer</span>
                     <span className="hidden md:block text-sm md:text-base font-semibold">
@@ -37,7 +37,7 @@ const Menu = ({ showCatMenu, setShowCatMenu }) => {
                     </span>
                     <button onClick={() => setShowOffer(false)} className="font-bold px-3">✖</button>
                 </div>
-            )}
+            )} */}
 
             <div className="mt-4"></div> 
 
